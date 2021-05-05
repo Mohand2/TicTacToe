@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 import '../widgets/build_card.dart';
@@ -5,11 +6,16 @@ import '../logic/variables.dart';
 import "dart:math";
 
 class GameScreen extends StatefulWidget {
+  final String playerName;
+
+  const GameScreen({Key key, this.playerName}) : super(key: key);
   @override
   _GameScreenState createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
+  bool userPlayed;
+  bool computerPlayed;
   @override
   void initState() {
     super.initState();
@@ -37,6 +43,8 @@ class _GameScreenState extends State<GameScreen> {
     diagonal2 = {1, 5, 9};
     gameOver = false;
     winner = 'Match Nul';
+    userPlayed = true;
+    computerPlayed = false;
   }
 
   // game reinitialisation
@@ -66,6 +74,8 @@ class _GameScreenState extends State<GameScreen> {
       diagonal2 = {1, 5, 9};
       gameOver = false;
       winner = 'Match Nul';
+      userPlayed = true;
+      computerPlayed = false;
     });
     print('Game restarted !');
   }
@@ -101,6 +111,10 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   userPlay(int id) async {
+    setState(() {
+      computerPlayed = true;
+      userPlayed = false;
+    });
     // chek if the id is in places
     if (places.contains(id)) {
       setState(() {
@@ -194,6 +208,10 @@ class _GameScreenState extends State<GameScreen> {
   // Computer turn to play
 
   computerPlay() async {
+    setState(() {
+      userPlayed = true;
+      computerPlayed = false;
+    });
     // picking a random id from the resting places
 
     final _random = new Random();
@@ -289,130 +307,227 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tic Tac Toe'),
-        centerTitle: true,
-      ),
-      body: !gameOver
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Player Choosed : $playerChoosed',
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Computer Choosed : $computerChoosed',
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BuildCard(
-                      img: image1,
-                      id: 1,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image2,
-                      id: 2,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image3,
-                      id: 3,
-                      play: userPlay,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BuildCard(
-                      img: image4,
-                      id: 4,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image5,
-                      id: 5,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image6,
-                      id: 6,
-                      play: userPlay,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    BuildCard(
-                      img: image7,
-                      id: 7,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image8,
-                      id: 8,
-                      play: userPlay,
-                    ),
-                    BuildCard(
-                      img: image9,
-                      id: 9,
-                      play: userPlay,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 50.0,
-                ),
-                TextButton(
-                  onPressed: gameInit,
-                  child: Text(
-                    'Replay',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Center(
-              child: Column(
-                children: [
-                  Text('$winner'),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  TextButton(
-                    onPressed: gameInit,
-                    child: Text(
-                      'Replay',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+      body: SafeArea(
+          child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/gameBackImage.jpg'),
+                fit: BoxFit.fill,
               ),
             ),
+          ),
+          !gameOver
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              child:
+                                  Center(child: Icon(Icons.arrow_back_rounded)),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Color(0xff28175C),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 70,
+                            width: 70,
+                            child: Center(child: Icon(Icons.surround_sound)),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Color(0xff28175C),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        buildPlayerCard(
+                            context: context,
+                            playerName: widget.playerName,
+                            avatar: playerAvatar,
+                            isPlaying: userPlayed),
+                        buildPlayerCard(
+                            context: context,
+                            avatar: botAvatar,
+                            isPlaying: computerPlayed),
+                      ],
+                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text(
+                    //       'Player Choosed : $playerChoosed',
+                    //       style: TextStyle(fontSize: 25.0),
+                    //     ),
+                    //     SizedBox(
+                    //       height: 20,
+                    //     ),
+                    //     Text(
+                    //       'Computer Choosed : $computerChoosed',
+                    //       style: TextStyle(fontSize: 25.0),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: 30.0,
+                    // ),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            BuildCard(
+                              img: image1,
+                              id: 1,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image2,
+                              id: 2,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image3,
+                              id: 3,
+                              play: userPlay,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            BuildCard(
+                              img: image4,
+                              id: 4,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image5,
+                              id: 5,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image6,
+                              id: 6,
+                              play: userPlay,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            BuildCard(
+                              img: image7,
+                              id: 7,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image8,
+                              id: 8,
+                              play: userPlay,
+                            ),
+                            BuildCard(
+                              img: image9,
+                              id: 9,
+                              play: userPlay,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        TextButton(
+                          onPressed: gameInit,
+                          child: Text(
+                            'Replay',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                    children: [
+                      Text('$winner'),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                      TextButton(
+                        onPressed: gameInit,
+                        child: Text(
+                          'Replay',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ],
+      )),
     );
   }
+}
+
+Widget buildPlayerCard(
+    {@required BuildContext context,
+    String playerName = 'EasyBot',
+    String avatar,
+    bool isPlaying}) {
+  return Container(
+    // margin: EdgeInsets.symmetric(vertical: 60),
+    height: MediaQuery.of(context).size.height / 4,
+    width: MediaQuery.of(context).size.width / 3,
+    decoration: BoxDecoration(
+      border: isPlaying
+          ? Border.all(
+              width: 3,
+              color: Colors.teal,
+            )
+          : null,
+      borderRadius: BorderRadius.circular(20),
+      color: Color(0xff28175C),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CircleAvatar(
+          backgroundColor: isPlaying ? Colors.orangeAccent : Color(0xff28175C),
+          backgroundImage: AssetImage(avatar),
+          maxRadius: isPlaying ? 50 : 30,
+          minRadius: 30,
+        ),
+        Text(
+          playerName.toUpperCase(),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
 }

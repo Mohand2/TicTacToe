@@ -21,15 +21,18 @@ class BuildCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => play(id),
       child: Container(
+        padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(30),
-        padding: EdgeInsets.all(20),
         height: 100,
         width: 100,
         decoration: BoxDecoration(
-          color: Colors.white,
+          border: Border.all(
+            width: 2,
+            color: Colors.teal,
+          ),
           borderRadius: BorderRadius.circular(15),
         ),
-        child: Image.network(
+        child: Image.asset(
           img,
           fit: BoxFit.cover,
         ),
