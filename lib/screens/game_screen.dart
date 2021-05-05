@@ -1,49 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:got_app/widgets/build_card.dart';
+import '../constants/constants.dart';
+import '../widgets/build_card.dart';
+import '../logic/variables.dart';
 import "dart:math";
 
-class HomeScreen extends StatefulWidget {
+class GameScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _GameScreenState createState() => _GameScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  String xImage =
-      'https://cdn3.iconfinder.com/data/icons/letters-and-numbers-1/32/letter_X_red-512.png';
-  String oImage =
-      'https://cdn2.iconfinder.com/data/icons/letters-and-numbers-1/32/lowercase_letter_o_red-512.png';
-
-  static const String img =
-      'https://www.eaglemat.com/media/images/colors/flocked-carpet-logo-mat/light-teal.png';
-
-  String image1;
-  String image2;
-  String image3;
-  String image4;
-  String image5;
-  String image6;
-  String image7;
-  String image8;
-  String image9;
-
-  String playerChoosed;
-  String computerChoosed;
-  List<int> places;
-  List<int> computerChoosedPlaces;
-  List<int> playerChoosedPlaces;
-
-  var column1;
-  var column2;
-  var column3;
-  var row1;
-  var row2;
-  var row3;
-  var diagonal1;
-  var diagonal2;
-
-  bool gameOver;
-  String winner;
-
+class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
@@ -73,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     winner = 'Match Nul';
   }
 
+  // game reinitialisation
   gameInit() {
     setState(() {
       image1 = img;
