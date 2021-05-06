@@ -6,6 +6,12 @@ import '../widgets/build_card.dart';
 import '../logic/variables.dart';
 import "dart:math";
 
+enum Result {
+  won,
+  lost,
+  nul,
+}
+
 class GameScreen extends StatefulWidget {
   final String playerName;
 
@@ -17,7 +23,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool userPlayed;
   bool computerPlayed;
-  bool isUserWon;
+  Result isUserWon;
   @override
   void initState() {
     super.initState();
@@ -30,7 +36,7 @@ class _GameScreenState extends State<GameScreen> {
     image7 = img;
     image8 = img;
     image9 = img;
-    isUserWon = false;
+    isUserWon = Result.nul;
     playerChoosed = 'waiting...';
     computerChoosed = 'waiting...';
     places = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -62,7 +68,7 @@ class _GameScreenState extends State<GameScreen> {
       image7 = img;
       image8 = img;
       image9 = img;
-      isUserWon = false;
+      isUserWon = Result.nul;
       places = [1, 2, 3, 4, 5, 6, 7, 8, 9];
       playerChoosedPlaces = [];
       computerChoosedPlaces = [];
@@ -197,7 +203,7 @@ class _GameScreenState extends State<GameScreen> {
           setState(() {
             gameOver = true;
             winner = 'player';
-            isUserWon = true;
+            isUserWon = Result.won;
           });
 
           print('player wins');
@@ -300,6 +306,7 @@ class _GameScreenState extends State<GameScreen> {
           // Game over if computer won
           gameOver = true;
           winner = 'computer';
+          isUserWon = Result.lost;
         });
         print('computer wins');
       }
@@ -461,20 +468,66 @@ class _GameScreenState extends State<GameScreen> {
                 )
               : Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircleAvatar(),
-                      Text('You win!'),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: CircleAvatar(
+                          backgroundImage: (() {
+                            if (isUserWon == Result.won) {
+                              return AssetImage(wonImage);
+                            } else if (isUserWon == Result.lost) {
+                              return AssetImage(loseImage);
+                            }
+                            return AssetImage(drawImage);
+                          }()),
+                          maxRadius: MediaQuery.of(context).size.height / 7,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: (() {
+                          if (isUserWon == Result.won) {
+                            return Text(
+                              'You won !',
+                              style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          } else if (isUserWon == Result.lost) {
+                            return Text(
+                              'You lost !',
+                              style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }
+                          return Text(
+                            'Nul !',
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.width / 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }()),
+                      ),
                       GestureDetector(
                         onTap: () => gameInit(),
-                        child: BuildButton(
-                          color: Colors.teal,
-                          icon: Icons.replay,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 70),
+                          child: BuildButton(
+                            color: Color(0xffD4af37),
+                            icon: Icons.replay,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                )
+                ),
         ],
       )),
     );
