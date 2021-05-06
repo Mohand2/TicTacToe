@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:got_app/screens/game_screen.dart';
+import '../constants/constants.dart';
+import '../screens/game_screen.dart';
+import '../widgets/build_home_button.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/homeScreen.jpg'),
+                  image: AssetImage(homeScreenImage),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -63,33 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )),
                       );
                     },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 13,
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(70),
-                        gradient: LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          colors: [
-                            //Color(0xff259FEF),
-                            //Color(0xff2CD67C),
-                            //Color(0xffA632F1),
-                            //Color(0xff2C1A6F),
-                            Color(0xffF89545),
-                            Color(0xffF85D8A),
-                          ],
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Play',
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.height / 35,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                    child: BuildHomeButton(
+                      title: 'Play',
+                      rightColor: Color(0xffF89545),
+                      leftColor: Color(0xffF85D8A),
                     ),
                   ),
                 ],

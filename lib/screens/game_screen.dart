@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../widgets/build_button.dart';
+import '../widgets/build_player_card.dart';
 import '../constants/constants.dart';
 import '../widgets/build_card.dart';
 import '../logic/variables.dart';
@@ -16,6 +17,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool userPlayed;
   bool computerPlayed;
+  bool isUserWon;
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,7 @@ class _GameScreenState extends State<GameScreen> {
     image7 = img;
     image8 = img;
     image9 = img;
+    isUserWon = false;
     playerChoosed = 'waiting...';
     computerChoosed = 'waiting...';
     places = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -59,6 +62,7 @@ class _GameScreenState extends State<GameScreen> {
       image7 = img;
       image8 = img;
       image9 = img;
+      isUserWon = false;
       places = [1, 2, 3, 4, 5, 6, 7, 8, 9];
       playerChoosedPlaces = [];
       computerChoosedPlaces = [];
@@ -193,6 +197,7 @@ class _GameScreenState extends State<GameScreen> {
           setState(() {
             gameOver = true;
             winner = 'player';
+            isUserWon = true;
           });
 
           print('player wins');
@@ -312,8 +317,9 @@ class _GameScreenState extends State<GameScreen> {
         children: [
           Container(
             decoration: BoxDecoration(
+              color: Color(0xff28175C),
               image: DecorationImage(
-                image: AssetImage('assets/images/gameBackImage.jpg'),
+                image: AssetImage(gameBackImage),
                 fit: BoxFit.fill,
               ),
             ),
@@ -329,25 +335,11 @@ class _GameScreenState extends State<GameScreen> {
                         children: [
                           GestureDetector(
                             onTap: () => Navigator.pop(context),
-                            child: Container(
-                              height: 70,
-                              width: 70,
-                              child:
-                                  Center(child: Icon(Icons.arrow_back_rounded)),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Color(0xff28175C),
-                              ),
-                            ),
+                            child: BuildButton(icon: Icons.arrow_back),
                           ),
-                          Container(
-                            height: 70,
-                            width: 70,
-                            child: Center(child: Icon(Icons.surround_sound)),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Color(0xff28175C),
-                            ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: BuildButton(icon: Icons.speaker_rounded),
                           ),
                         ],
                       ),
@@ -355,12 +347,14 @@ class _GameScreenState extends State<GameScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        buildPlayerCard(
+                        BuildPlayerCard(
+                            playImg: xImage,
                             context: context,
                             playerName: widget.playerName,
                             avatar: playerAvatar,
                             isPlaying: userPlayed),
-                        buildPlayerCard(
+                        BuildPlayerCard(
+                            playImg: oImage,
                             context: context,
                             avatar: botAvatar,
                             isPlaying: computerPlayed),
@@ -467,67 +461,22 @@ class _GameScreenState extends State<GameScreen> {
                 )
               : Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('$winner'),
-                      SizedBox(
-                        height: 50.0,
-                      ),
-                      TextButton(
-                        onPressed: gameInit,
-                        child: Text(
-                          'Replay',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      CircleAvatar(),
+                      Text('You win!'),
+                      GestureDetector(
+                        onTap: () => gameInit(),
+                        child: BuildButton(
+                          color: Colors.teal,
+                          icon: Icons.replay,
                         ),
                       ),
                     ],
                   ),
-                ),
+                )
         ],
       )),
     );
   }
-}
-
-Widget buildPlayerCard(
-    {@required BuildContext context,
-    String playerName = 'EasyBot',
-    String avatar,
-    bool isPlaying}) {
-  return Container(
-    // margin: EdgeInsets.symmetric(vertical: 60),
-    height: MediaQuery.of(context).size.height / 4,
-    width: MediaQuery.of(context).size.width / 3,
-    decoration: BoxDecoration(
-      border: isPlaying
-          ? Border.all(
-              width: 3,
-              color: Colors.teal,
-            )
-          : null,
-      borderRadius: BorderRadius.circular(20),
-      color: Color(0xff28175C),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        CircleAvatar(
-          backgroundColor: isPlaying ? Colors.orangeAccent : Color(0xff28175C),
-          backgroundImage: AssetImage(avatar),
-          maxRadius: isPlaying ? 50 : 30,
-          minRadius: 30,
-        ),
-        Text(
-          playerName.toUpperCase(),
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ),
-  );
 }
