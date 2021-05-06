@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/build_button.dart';
 import '../widgets/build_player_card.dart';
 import '../constants/constants.dart';
@@ -24,9 +25,11 @@ class _GameScreenState extends State<GameScreen> {
   bool userPlayed;
   bool computerPlayed;
   Result isUserWon;
+
   @override
   void initState() {
     super.initState();
+
     image1 = img;
     image2 = img;
     image3 = img;
@@ -182,6 +185,7 @@ class _GameScreenState extends State<GameScreen> {
           break;
         default:
       }
+
       // print(id);
       setState(() {
         playerChoosedPlaces.add(id);
@@ -209,8 +213,10 @@ class _GameScreenState extends State<GameScreen> {
           print('player wins');
         }
       }
+
       // make a delay befor the computer plays
       await Future.delayed(const Duration(seconds: 1));
+
       // if places are available and the is no over the it computer turns
       if (places.isNotEmpty && !gameOver) computerPlay();
     }
@@ -488,31 +494,13 @@ class _GameScreenState extends State<GameScreen> {
                         padding: const EdgeInsets.all(20),
                         child: (() {
                           if (isUserWon == Result.won) {
-                            return Text(
-                              'You won !',
-                              style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            );
+                            return resultText(
+                                context: context, text: 'You won');
                           } else if (isUserWon == Result.lost) {
-                            return Text(
-                              'You lost !',
-                              style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            );
+                            return resultText(
+                                context: context, text: 'You lost');
                           }
-                          return Text(
-                            'Nul !',
-                            style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
+                          return resultText(context: context, text: 'Nul');
                         }()),
                       ),
                       GestureDetector(
@@ -530,6 +518,17 @@ class _GameScreenState extends State<GameScreen> {
                 ),
         ],
       )),
+    );
+  }
+
+  Text resultText({BuildContext context, @required String text}) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: Colors.grey[400],
+        fontSize: MediaQuery.of(context).size.width / 12,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }

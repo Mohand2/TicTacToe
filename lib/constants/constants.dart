@@ -14,3 +14,5 @@ const String botAvatar = 'assets/images/bot.png';
 const String wonImage = 'assets/images/won.png';
 const String loseImage = 'assets/images/lose.png';
 const String drawImage = 'assets/images/draw.png';
+
+const String buttonClickSound = 'assets/audios/buttonClick.mp3';
